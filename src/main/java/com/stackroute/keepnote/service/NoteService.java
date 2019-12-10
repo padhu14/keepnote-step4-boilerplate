@@ -14,7 +14,7 @@ public interface NoteService {
 	 */
 	public boolean createNote(Note note) throws ReminderNotFoundException, CategoryNotFoundException;
 
-	public boolean deleteNote(int noteId)throws NoteNotFoundException;
+	public boolean deleteNote(int noteId);
 
 	public List<Note> getAllNotesByUserId(String userId);
 

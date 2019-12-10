@@ -14,7 +14,7 @@ public interface NoteDAO {
 
 	public boolean createNote(Note note);
 
-	public boolean deleteNote(int noteId)throws NoteNotFoundException;
+	public boolean deleteNote(int noteId);
 
 	public List<Note> getAllNotesByUserId(String userId);
 

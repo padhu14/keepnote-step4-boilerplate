@@ -1,6 +1,14 @@
 package com.stackroute.keepnote.model;
 
+import java.io.Serializable;
 import java.util.Date;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
 /*
  * The class "User" will be acting as the data model for the User Table in the database. 
@@ -9,8 +17,9 @@ import java.util.Date;
  * If it finds any, then it will begin the process of looking through that particular 
  * Java object to recreate it as a table in your database.
  */
-
-public class User {
+@Entity
+@Table(name = "USER")
+public class User implements Serializable{
 
 	/*
 	 * This class should have five fields (userId,userName,
@@ -21,46 +30,70 @@ public class User {
 	 * the user but should be always initialized with the system date
 	 */
 
+	@Id
+//	@GeneratedValue(strategy = GenerationType.AUTO)
+	@Column(name = "user_id")
+	private String userId;
+	@Column(name = "user_name")
+	private String userName;
+	@Column(name = "user_password")
+	private String userPassword;
+	@Column(name = "user_mobile")
+	private String userMobile;
+	@Column(name = "user_added_date")
+	private Date userAddedDate;
+
 	public User() {
 
 	}
 
-	public User(String string, String string1, String string2, String string3, Date date) {
-
+	public User(String userId, String userName, String userPassword, String userMobile, Date userAddedDate) {
+		super();
+		this.userId = userId;
+		this.userName = userName;
+		this.userPassword = userPassword;
+		this.userMobile = userMobile;
+		this.userAddedDate = userAddedDate;
 	}
 
 	public String getUserId() {
-		return null;
+		return userId;
 	}
 
-	public void setUserId(String string) {
-
+	public void setUserId(String userId) {
+		this.userId = userId;
 	}
 
-	public void setUserName(String string) {
+	public String getUserName() {
+		return userName;
+	}
 
+	public void setUserName(String userName) {
+		this.userName = userName;
 	}
 
 	public String getUserPassword() {
-		return null;
-
+		return userPassword;
 	}
 
-	public void setUserPassword(String string) {
-
+	public void setUserPassword(String userPassword) {
+		this.userPassword = userPassword;
 	}
 
 	public String getUserMobile() {
-		return null;
-
+		return userMobile;
 	}
 
-	public void setUserMobile(String string) {
-
+	public void setUserMobile(String userMobile) {
+		this.userMobile = userMobile;
 	}
 
-	public void setUserAddedDate(Date date) {
+	public Date getUserAddedDate() {
+		return userAddedDate;
+	}
 
+	public void setUserAddedDate(Date userAddedDate) {
+		this.userAddedDate = userAddedDate;
 	}
 
 }

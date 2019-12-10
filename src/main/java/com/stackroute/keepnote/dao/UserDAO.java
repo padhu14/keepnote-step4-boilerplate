@@ -14,7 +14,7 @@ public interface UserDAO {
 
 	public boolean updateUser(User user);
 
-	public User getUserById(String UserId);
+	public User getUserById(String UserId) ;
 
 	public boolean validateUser(String userName, String password) throws UserNotFoundException;
 

@@ -1,6 +1,16 @@
 package com.stackroute.keepnote.dao;
 
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
+import javax.transaction.Transactional;
+
+import org.hibernate.HibernateException;
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+
 import com.stackroute.keepnote.exception.UserNotFoundException;
 import com.stackroute.keepnote.model.User;
 
@@ -13,15 +23,19 @@ import com.stackroute.keepnote.model.User;
  * 					transaction. The database transaction happens inside the scope of a persistence 
  * 					context.  
  * */
+@Repository
+@Transactional
 public class UserDaoImpl implements UserDAO {
 
 	/*
 	 * Autowiring should be implemented for the SessionFactory.(Use
 	 * constructor-based autowiring.
 	 */
+	@Autowired
+	private SessionFactory sessionFactory;
 
 	public UserDaoImpl(SessionFactory sessionFactory) {
-
+		this.sessionFactory = sessionFactory;
 	}
 
 	/*
@@ -29,8 +43,8 @@ public class UserDaoImpl implements UserDAO {
 	 */
 
 	public boolean registerUser(User user) {
-
-		return false;
+		sessionFactory.getCurrentSession().save(user);
+		return true;
 	}
 
 	/*
@@ -38,8 +52,8 @@ public class UserDaoImpl implements UserDAO {
 	 */
 
 	public boolean updateUser(User user) {
-
-		return false;
+		sessionFactory.getCurrentSession().update(user);
+		return true;
 
 	}
 
@@ -47,8 +61,7 @@ public class UserDaoImpl implements UserDAO {
 	 * Retrieve details of a specific user
 	 */
 	public User getUserById(String UserId) {
-
-		return null;
+		return sessionFactory.getCurrentSession().find(User.class, UserId);
 	}
 
 	/*
@@ -56,7 +69,17 @@ public class UserDaoImpl implements UserDAO {
 	 */
 
 	public boolean validateUser(String userId, String password) throws UserNotFoundException {
-		return false;
+		Session session = sessionFactory.getCurrentSession();
+		CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
+		CriteriaQuery<User> criteriaQuery = criteriaBuilder.createQuery(User.class);
+		Root<User> root = criteriaQuery.from(User.class);
+		criteriaQuery = criteriaQuery.select(root).where(criteriaBuilder.equal(root.get("userId"), userId),
+				criteriaBuilder.equal(root.get("userPassword"), password));
+		User user = session.createQuery(criteriaQuery).uniqueResult();
+		if (user == null) {
+			throw new UserNotFoundException("UserNotFoundException");
+		}
+		return true;
 
 	}
 
@@ -64,7 +87,12 @@ public class UserDaoImpl implements UserDAO {
 	 * Remove an existing user
 	 */
 	public boolean deleteUser(String userId) {
-		return false;
+		User user = getUserById(userId);
+		if (user == null) {
+			return false;
+		}
+		sessionFactory.getCurrentSession().delete(user);
+		return true;
 
 	}
 
